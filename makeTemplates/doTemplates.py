@@ -16,12 +16,13 @@ lumiStr = str(targetlumi/1000).replace('.','p') # 1/fb
 
 region='PS' #PS,SR,TTCR,WJCR
 isCategorized=0
-cutString=''#'lep30_MET100_NJets4_DR1_1jet250_2jet50'
+#cutString='el35mu30_MET60_MT60_1jet0_2jet00' #my change #'lep30_MET100_NJets4_DR1_1jet250_2jet50'  #mary changed
+cutString=''
 if region=='SR': pfix='templates_'
 if region=='TTCR': pfix='ttbar_'
 if region=='WJCR': pfix='wjets_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-pfix+='2019_2_10'
+pfix+='2019_2_13' #my change  #Mary changed
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
 scaleSignalXsecTo1pb = True # this has to be "True" if you are making templates for limit calculation!!!!!!!!
@@ -82,9 +83,10 @@ njetslist = ['7','8','9','10p']
 if not isCategorized: 	
 	nttaglist = ['0p']
 	nWtaglist = ['0p']
-	nbtaglist = ['2p']
-	njetslist = ['4p']
+	nbtaglist = ['2p'] # change back to 2
+	njetslist = ['4p'] #change back to 4
 catList = ['is'+item[0]+'_nT'+item[1]+'_nW'+item[2]+'_nB'+item[3]+'_nJ'+item[4] for item in list(itertools.product(isEMlist,nttaglist,nWtaglist,nbtaglist,njetslist))]
+print 'catList is:', catList #Mary changed
 tagList = ['nT'+item[0]+'_nW'+item[1]+'_nB'+item[2]+'_nJ'+item[3] for item in list(itertools.product(nttaglist,nWtaglist,nbtaglist,njetslist))]
 
 lumiSys = 0.0#25 #lumi uncertainty

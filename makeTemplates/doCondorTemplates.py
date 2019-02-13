@@ -4,7 +4,7 @@ thisDir = os.getcwd()
 outputDir = thisDir+'/'
 
 region='PS' #PS,SR,TTCR,WJCR
-categorize=1 #1==categorize into t/W/b/j, 0==only split into flavor
+categorize=0 #1==categorize into t/W/b/j, 0==only split into flavor # don't do this for PS
 
 cTime=datetime.datetime.now()
 date='%i_%i_%i'%(cTime.year,cTime.month,cTime.day)

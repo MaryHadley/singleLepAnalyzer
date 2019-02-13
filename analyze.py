@@ -49,6 +49,7 @@ def analyze(tTree,process,cutList,isotrig,doAllSys,doJetRwt,iPlot,plotDetails,ca
 	cut += ' && (theJetPt_JetSubCalc_PtOrdered[1] > '+str(cutList['jet2PtCut'])+')'
 	cut += ' && (theJetPt_JetSubCalc_PtOrdered[2] > '+str(cutList['jet3PtCut'])+')'
 	cut += ' && (minDR_lepJet > 0.4)'# || ptRel_lepJet > 40)'
+        cut += ' && (AK4HT  > '+str(cutList['AK4HTCut'])+')' #Mary changed
 # 	if 'CR' in region:
 # 		cut += ' && (deltaR_lepJets[1] >= 0.4 && deltaR_lepJets[1] < '+str(cutList['drCut'])+')'
 # 	else: # 'PS' or 'SR'

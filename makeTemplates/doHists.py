@@ -64,7 +64,7 @@ runData = True
 runBkgs = True
 runSigs = True
 
-cutList = {'elPtCut':35,'muPtCut':30,'metCut':60,'mtCut':60,'jet1PtCut':0,'jet2PtCut':0,'jet3PtCut':0}
+cutList = {'elPtCut':35,'muPtCut':30,'metCut':60,'mtCut':60,'jet1PtCut':0,'jet2PtCut':0,'jet3PtCut':0, 'AK4HTCut': 300}
 
 cutString  = 'el'+str(int(cutList['elPtCut']))+'mu'+str(int(cutList['muPtCut']))
 cutString += '_MET'+str(int(cutList['metCut']))+'_MT'+str(cutList['mtCut'])
@@ -97,11 +97,11 @@ if len(sys.argv)>8: nbtaglist=[str(sys.argv[8])]
 else: 
 	if region=='WJCR': nbtaglist = ['0']
 	else: 
-		if not isCategorized: nbtaglist = ['1p']
+		if not isCategorized: nbtaglist = ['2p']
 		else: nbtaglist=['1','2p']
 if len(sys.argv)>9: njetslist=[str(sys.argv[9])]
 else: 
-	if region=='PS': njetslist=['3p']
+	if region=='PS': njetslist=['4p']
 	else: njetslist=['4p']
 
 def readTree(file):
