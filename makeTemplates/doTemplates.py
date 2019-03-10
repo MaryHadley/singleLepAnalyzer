@@ -22,7 +22,7 @@ if region=='SR': pfix='templates_'
 if region=='TTCR': pfix='ttbar_'
 if region=='WJCR': pfix='wjets_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-pfix+='2019_2_13' #my change  #Mary changed
+pfix+='2019_3_6' #my change  #Mary changed
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
 scaleSignalXsecTo1pb = True # this has to be "True" if you are making templates for limit calculation!!!!!!!!
@@ -83,8 +83,8 @@ njetslist = ['7','8','9','10p']
 if not isCategorized: 	
 	nttaglist = ['0p']
 	nWtaglist = ['0p']
-	nbtaglist = ['2p'] # change back to 2
-	njetslist = ['4p'] #change back to 4
+	nbtaglist = ['1p'] # change back to 1
+	njetslist = ['4p'] #change back to 3
 catList = ['is'+item[0]+'_nT'+item[1]+'_nW'+item[2]+'_nB'+item[3]+'_nJ'+item[4] for item in list(itertools.product(isEMlist,nttaglist,nWtaglist,nbtaglist,njetslist))]
 print 'catList is:', catList #Mary changed
 tagList = ['nT'+item[0]+'_nW'+item[1]+'_nB'+item[2]+'_nJ'+item[3] for item in list(itertools.product(nttaglist,nWtaglist,nbtaglist,njetslist))]
@@ -570,6 +570,9 @@ for iPlot in iPlotList:
 	sighists  = {}
 	if len(sys.argv)>1 and iPlot!=sys.argv[1]: continue
 	print "LOADING DISTRIBUTION: "+iPlot
+        if 'BD_Trijet_TopMass' in iPlot: continue #hack to correct my mistake
+        if 'GD_Trijet_TopMass' in iPlot: continue #hack to correct my mistake
+        #if 'BD_Ttrijet_TopMass' in iPlot: continue
 	for cat in catList:
 		print "         ",cat[2:]
 		datahists.update(pickle.load(open(outDir+'/'+cat[2:]+'/datahists_'+iPlot+'.p','rb')))

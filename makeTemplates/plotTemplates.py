@@ -24,7 +24,7 @@ if region=='SR': pfix='templates_'
 elif region=='WJCR': pfix='wjets_'
 elif region=='TTCR': pfix='ttbar_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-templateDir=os.getcwd()+'/'+pfix+'2019_2_13/'+cutString+'/' #same from doTemplates
+templateDir=os.getcwd()+'/'+pfix+'2019_3_6/'+cutString+'/' #same from doTemplates
 #templateDir = os.getcwd()+'/'+'kinematics_PS_minMlb_TEST_2019_2_13'+'/'+cutString + '/'
 print 'templateDir is:', templateDir
 postFitFile=os.getcwd()+'/../thetaLimits/chi2test_2017_2_12/histos-mle.root'
@@ -61,7 +61,7 @@ if not doAllSys: doOneBand = True # Don't change this!
 blind = False #ok because we are in preselection!!!
 yLog  = False
 if yLog: scaleSignals = False
-doRealPull = True #if we put this to False, will just do data/MC
+doRealPull = False #if we put this to False, will just do data/MC #if True, does (obs-bkg)/uncert
 if doRealPull: doOneBand=False
 compareShapes = False
 if compareShapes: blind,yLog,scaleSignals,sigScaleFact=True,False,False,-1
@@ -75,8 +75,8 @@ njetslist = ['7','8','9','10p']
 if not isCategorized: 	
 	nttaglist = ['0p']
 	nWtaglist = ['0p']
-	nbtaglist = ['2p'] # change back to 2
-	njetslist = ['4p'] #change back to 4
+	nbtaglist = ['1p'] # change back to 1
+	njetslist = ['4p'] #change back to 3
 if 'YLD' in iPlot:
 	doNormByBinWidth = False
 	nttaglist = ['0p']
