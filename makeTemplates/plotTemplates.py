@@ -17,14 +17,16 @@ lumiInTemplates= str(targetlumi/1000).replace('.','p') # 1/fb
 
 region='PS' #PS,SR,TTCR,WJCR
 isCategorized=0
-iPlot='ST'
+iPlot='minMlb'
 if len(sys.argv)>1: iPlot=str(sys.argv[1])
-cutString=''
+cutString='' #might have to change back
 if region=='SR': pfix='templates_'
 elif region=='WJCR': pfix='wjets_'
 elif region=='TTCR': pfix='ttbar_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-templateDir=os.getcwd()+'/'+pfix+'2019_2_10/'+cutString+'/'
+templateDir=os.getcwd()+'/'+pfix+'2019_3_6/'+cutString+'/' #same from doTemplates
+#templateDir = os.getcwd()+'/'+'kinematics_PS_minMlb_TEST_2019_2_13'+'/'+cutString + '/'
+print 'templateDir is:', templateDir
 postFitFile=os.getcwd()+'/../thetaLimits/chi2test_2017_2_12/histos-mle.root'
 plotPostFit = False #this is not working yet!!
 
@@ -36,7 +38,7 @@ sig1leg='t#bar{t}t#bar{t}'
 sig2='4TM690' #  choose the 2nd signal to plot
 sig2leg='t#bar{t}t#bar{t}'#'X_{5/3}#bar{X}_{5/3} RH (1.2 TeV)'
 scaleSignals = True
-sigScaleFact = 20 #put -1 if auto-scaling wanted
+sigScaleFact = 20 #put -1 if auto-scaling wanted #puts signal at same level as bkg #good for comparing shape of bkg and signal
 tempsig='templates_'+iPlot+'_'+sig1+'_'+lumiInTemplates+'fb'+isRebinned+'.root'
 
 bkgProcList = ['top','ewk','qcd']
@@ -52,14 +54,14 @@ doAllSys = False
 doQ2sys  = False
 if not doAllSys: doQ2sys = False
 addCRsys = False
-doNormByBinWidth=True
+doNormByBinWidth=True #often for limit templates you have non uniform binning. setting this to true helps deal with this. usually you need this when you rebin
 if 'rebinned' not in isRebinned or 'stat1p1' in isRebinned: doNormByBinWidth=False
 doOneBand = False
 if not doAllSys: doOneBand = True # Don't change this!
-blind = False
-yLog  = True
+blind = False #ok because we are in preselection!!!
+yLog  = False
 if yLog: scaleSignals = False
-doRealPull = True
+doRealPull = False #if we put this to False, will just do data/MC #if True, does (obs-bkg)/uncert
 if doRealPull: doOneBand=False
 compareShapes = False
 if compareShapes: blind,yLog,scaleSignals,sigScaleFact=True,False,False,-1
@@ -73,8 +75,8 @@ njetslist = ['7','8','9','10p']
 if not isCategorized: 	
 	nttaglist = ['0p']
 	nWtaglist = ['0p']
-	nbtaglist = ['2p']
-	njetslist = ['4p']
+	nbtaglist = ['1p'] # change back to 1
+	njetslist = ['4p'] #change back to 3
 if 'YLD' in iPlot:
 	doNormByBinWidth = False
 	nttaglist = ['0p']

@@ -4,7 +4,7 @@ thisDir = os.getcwd()
 outputDir = thisDir+'/'
 
 region='PS' #PS,SR,TTCR,WJCR
-categorize=1 #1==categorize into t/W/b/j, 0==only split into flavor
+categorize=0 #1==categorize into t/W/b/j, 0==only split into flavor # don't do this for PS
 
 cTime=datetime.datetime.now()
 date='%i_%i_%i'%(cTime.year,cTime.month,cTime.day)
@@ -63,8 +63,8 @@ iPlotList = [#distribution name as defined in "doHists.py"
 # 			'Wjet1Pt',
 # 			'Tjet1Pt',
 # 			'deltaPhiLMET',	
-# 			'Jet5Pt',
-# 			'Jet6Pt',
+ 			'Jet5Pt',
+ 			'Jet6Pt',
 # 			'JetPtBins',
 # 			'Jet1PtBins',
 # 			'Jet2PtBins',
@@ -90,6 +90,29 @@ iPlotList = [#distribution name as defined in "doHists.py"
 # 			'Tau3',
 # 			'JetPhi',
 # 			'JetPhiAK8',
+                        'HT_b',
+                        'HT_ratio',
+                        'HT_2m',
+                        'Centrality',
+                        'thirdcsvb_bb',
+                        'fourthcsvb_bb',
+                        'csvJet3',
+                        'csvJet4',
+                        'HTx',
+                        'MHRE',
+                        'GD_Ttrijet_TopMass',
+                        'BD_Ttrijet_TopMass',
+                        'GD_DCSV_jetNotdijet',
+                        'GD_DR_Tridijet',
+                        'BD_DR_Tridijet',
+                        'GD_DR_Trijet_jetNotdijet',
+                        'BD_DR_Trijet_jetNotdijet',
+                        'GD_Mass_minDR_dijet',
+                        'BD_Mass_minDR_dijet',
+                        'GD_pTrat',
+                        'BD_pTrat',
+                        'BD_DCSV_jetNotdijet',
+                      
 			]
 
 isEMlist  = ['E','M']
@@ -100,8 +123,8 @@ njetslist = ['3','4','5','6','7','8','9','10p']
 if not categorize: 	
 	nttaglist = ['0p']
 	nWtaglist = ['0p']
-	nbtaglist = ['2p']
-	njetslist = ['4p']
+	nbtaglist = ['1p'] #to match what Sinan has
+	njetslist = ['4p'] #4 to match what Sinan had in step 1 15 Feb. 2019 MHH
 catList = list(itertools.product(isEMlist,nttaglist,nWtaglist,nbtaglist,njetslist))
 
 outDir = outputDir+pfix

@@ -14,8 +14,9 @@ gROOT.SetBatch(1)
 start_time = time.time()
 
 lumiStr = str(targetlumi/1000).replace('.','p') # 1/fb
-step1Dir = '/mnt/hadoop/users/ssagir/LJMet94X_1lepTT_020619_step1hadds/nominal'
-
+#step1Dir = '/mnt/hadoop/users/ssagir/LJMet94X_1lepTT_020619_step1hadds/nominal'
+#step1Dir = '/isilon/hadoop/store/user/mhadley/TTTT/LJMet94X_1lepTT_022719_step2_saraBDay/nominal' #step2Dir,actually, in this case
+step1Dir = '/isilon/hadoop/store/user/mhadley/TTTT/LJMet94X_1lepTT_030619_step2_20GeVJetPtCut/nominal' #step2Dir actually, in this case
 """
 Note: 
 --Each process in step1 (or step2) directories should have the root files hadded! 
@@ -29,11 +30,11 @@ where <shape> is for example "JECUp". hadder.py can be used to prepare input fil
 bkgList = [
 		  'DY','WJetsMG400','WJetsMG600','WJetsMG800','WJetsMG1200','WJetsMG2500',
 		  'TTJetsHad0','TTJetsHad700','TTJetsHad1000',
-		  'TTJetsSemiLep0','TTJetsSemiLep700','TTJetsSemiLep1000',
+		  'TTJetsSemiLep0', 'TTJetsSemiLep700','TTJetsSemiLep1000',
 	 	  'TTJets2L2nu0','TTJets2L2nu700','TTJets2L2nu1000',
 		  'TTJetsPH700mtt','TTJetsPH1000mtt',
 		  'Ts','Tt','Tbt','TtW','TbtW','TTWl','TTZl',
-		  #'QCDht100','QCDht200',
+		  #'QCDht100','QCDht200', 
 		  'QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000',
 		  ]
 
@@ -47,7 +48,7 @@ elif whichSignal=='TT': decays = ['BWBW','THTH','TZTZ','TZBW','THBW','TZTH'] #T'
 elif whichSignal=='BB': decays = ['TWTW','BHBH','BZBZ','BZTW','BHTW','BZBH'] #B' decays
 else: decays = [''] #decays to tWtW 100% of the time
 
-iPlot = 'minMlb' #choose a discriminant from plotList below!
+iPlot = 'BD_DCSV_jetNotdijet' #choose a discriminant from plotList below!
 if len(sys.argv)>2: iPlot=sys.argv[2]
 region = 'PS'
 if len(sys.argv)>3: region=sys.argv[3]
@@ -64,7 +65,7 @@ runData = True
 runBkgs = True
 runSigs = True
 
-cutList = {'elPtCut':35,'muPtCut':30,'metCut':60,'mtCut':60,'jet1PtCut':0,'jet2PtCut':0,'jet3PtCut':0}
+cutList = {'elPtCut':35,'muPtCut':30,'metCut':60,'mtCut':60,'jet1PtCut':0,'jet2PtCut':0,'jet3PtCut':0, 'AK4HTCut': 300}
 
 cutString  = 'el'+str(int(cutList['elPtCut']))+'mu'+str(int(cutList['muPtCut']))
 cutString += '_MET'+str(int(cutList['metCut']))+'_MT'+str(cutList['mtCut'])
@@ -97,11 +98,11 @@ if len(sys.argv)>8: nbtaglist=[str(sys.argv[8])]
 else: 
 	if region=='WJCR': nbtaglist = ['0']
 	else: 
-		if not isCategorized: nbtaglist = ['1p']
+		if not isCategorized: nbtaglist = ['1p'] #was '1p' chaning to '2p' because I want to do a local test of what Freya requetsed before launching condor 28 Feb. 2019 #changed back to '1p' 6 March 2019
 		else: nbtaglist=['1','2p']
 if len(sys.argv)>9: njetslist=[str(sys.argv[9])]
 else: 
-	if region=='PS': njetslist=['3p']
+	if region=='PS': njetslist=['4p']   #used to be '3p', changing to '4p' to be consistent with the cut sinan made in step 1 15 Feb. 2019 
 	else: njetslist=['4p']
 
 def readTree(file):
@@ -164,13 +165,13 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
 	'lepPt' :('leptonPt_singleLepCalc',linspace(0, 1000, 51).tolist(),';Lepton p_{T} [GeV]'),
 	'lepEta':('leptonEta_singleLepCalc',linspace(-4, 4, 41).tolist(),';Lepton #eta'),
 	'JetEta':('theJetEta_JetSubCalc_PtOrdered',linspace(-4, 4, 41).tolist(),';AK4 jet #eta'),
-	'JetPt' :('theJetPt_JetSubCalc_PtOrdered',linspace(0, 1500, 51).tolist(),';jet p_{T} [GeV]'),
-	'Jet1Pt':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0, 1500, 51).tolist(),';p_{T}(j_{1}) [GeV]'),
-	'Jet2Pt':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0, 1500, 51).tolist(),';p_{T}(j_{2}) [GeV]'),
-	'Jet3Pt':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0, 800, 51).tolist(),';p_{T}(j_{3}) [GeV]'),
-	'Jet4Pt':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0, 500, 51).tolist(),';p_{T}(j_{4}) [GeV]'),
-	'Jet5Pt':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0, 500, 51).tolist(),';p_{T}(j_{5}) [GeV]'),
-	'Jet6Pt':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0, 500, 51).tolist(),';p_{T}(j_{6}) [GeV]'),
+	'JetPt' :('theJetPt_JetSubCalc_PtOrdered',linspace(0, 800, 81).tolist(),';jet p_{T} [GeV]'),
+	'Jet1Pt':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0, 800, 81).tolist(),';p_{T}(j_{1}) [GeV]'),
+	'Jet2Pt':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0, 800, 81).tolist(),';p_{T}(j_{2}) [GeV]'),
+	'Jet3Pt':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0, 800, 81).tolist(),';p_{T}(j_{3}) [GeV]'),
+	'Jet4Pt':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0, 300, 31).tolist(),';p_{T}(j_{4}) [GeV]'),
+	'Jet5Pt':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0, 300, 31).tolist(),';p_{T}(j_{5}) [GeV]'),
+	'Jet6Pt':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0, 300, 31).tolist(),';p_{T}(j_{6}) [GeV]'),
 	'JetPtBins' :('theJetPt_JetSubCalc_PtOrdered',linspace(0,2000,21).tolist(),';AK4 jet p_{T} [GeV]'),
 	'Jet1PtBins':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0,2000,21).tolist(),';p_{T}(j_{1}) [GeV]'),
 	'Jet2PtBins':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0,2000,21).tolist(),';p_{T}(j_{2}) [GeV]'),
@@ -251,6 +252,28 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
 # 	'ST':('AK4HTpMETpLepPt',linspace(650, 4000, 671).tolist(),';S_{T} [GeV]'),
 	'minMlb':('minMleppBjet',linspace(0, 1000, 201).tolist(),';min[M(l,b)] [GeV]'),
 	'minMlbSBins':('minMleppBjet',linspace(0, 1000, 1001).tolist(),';min[M(l,b)] [GeV]'),
+    'HT_b':('HT_bjets',linspace(0, 4000, 101).tolist(),';H_{T} of b jets [GeV]'),  
+    'HT_ratio':('HT_ratio',linspace(0, 40, 41).tolist(),';H_{T} ratio of 4 leading pT jets to other jets'), 
+    'HT_2m':('HT_2m',linspace(0, 3000, 101).tolist(),';Event H_{T} - (H_{T} of 2 lead b jets)'),
+    'Centrality':('centrality',linspace(0, 1, 21).tolist(),';H_{T}/H'),
+    'thirdcsvb_bb':('thirdcsvb_bb',linspace(0, 1, 21).tolist(),'Jet with third-highest DeepCSVb + DeepCSVbb in the evt'),
+    'fourthcsvb_bb':('fourthcsvb_bb',linspace(0, 1, 21).tolist(),'Jet with fourth-highest DeepCSVb + DeepCSVbb in the evt'),
+    'csvJet3':('csvJet3',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet3pt'),
+    'csvJet4':('csvJet4',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet4pt'),
+    'HTx':('HTx',linspace(0, 1000, 101).tolist(),';H_{T} of reduced hadronic system [GeV]'), 
+    'MHRE':('MHRE',linspace(0, 1000, 101).tolist(),';Invariant mass of all jets minus reconst. had. tops [GeV]'), 
+    'GD_Ttrijet_TopMass':('GD_Ttrijet_TopMass',linspace(0, 400, 101).tolist(),';Invariant mass of good trijet [GeV]'),
+    'BD_Ttrijet_TopMass':('BD_Ttrijet_TopMass',linspace(0, 2000, 501).tolist(),';Invariant mass of bad trijets [GeV]'),
+    'GD_DCSV_jetNotdijet':('GD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for good trijet'),
+    'BD_DCSV_jetNotdijet':('BD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for bad trijets'),
+    'GD_DR_Tridijet':('GD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the good trijet'),
+    'BD_DR_Tridijet':('BD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the bad trijets'),
+    'GD_DR_Trijet_jetNotdijet':('GD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the good trijet'),
+    'BD_DR_Trijet_jetNotdijet':('BD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the bad trijets'),
+    'GD_Mass_minDR_dijet':('GD_Mass_minDR_dijet',linspace(0, 250, 51).tolist(),';dijet inv. mass of 2 jets in good trijet with min dR separation [GeV]'),
+    'BD_Mass_minDR_dijet':('BD_Mass_minDR_dijet',linspace(0, 1000, 201).tolist(),';dijet invariant mass of two jets in bad trijets with min dR separation [GeV]'),
+    'GD_pTrat':('GD_pTrat',linspace(0, 2, 21).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in good trijet'),
+    'BD_pTrat':('BD_pTrat',linspace(0, 4, 41).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in bad trijets'),
 	}
 
 print "PLOTTING:",iPlot
