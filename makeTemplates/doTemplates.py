@@ -22,7 +22,13 @@ if region=='SR': pfix='templates_'
 if region=='TTCR': pfix='ttbar_'
 if region=='WJCR': pfix='wjets_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-pfix+='2019_3_6' #my change  #Mary changed
+#pfix+='2019_3_6' #my change  #Mary changed
+#pfix+='2019_3_22' #testing 30GeV sample
+#pfix+='2019_3_23' #testing 20 GeV sample
+#pfix+='2019_3_27' #additional variables to use with BDT/NN added 2019_3_27
+#pfix+='2019_3_29' #additional variables to use with BDT/NN added 2019_3_29
+#pfix+='2019_3_30' #additional variables to use with BDT/NN added 2019_3_30
+pfix+='2019_3_31' #still missing the minMleppJet branch but want to ask Jangbae a question about this
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
 scaleSignalXsecTo1pb = True # this has to be "True" if you are making templates for limit calculation!!!!!!!!
@@ -572,6 +578,7 @@ for iPlot in iPlotList:
 	print "LOADING DISTRIBUTION: "+iPlot
         if 'BD_Trijet_TopMass' in iPlot: continue #hack to correct my mistake
         if 'GD_Trijet_TopMass' in iPlot: continue #hack to correct my mistake
+        if 'minMleppBJet'      in iPlot: continue #hack to correct my mistake
         #if 'BD_Ttrijet_TopMass' in iPlot: continue
 	for cat in catList:
 		print "         ",cat[2:]

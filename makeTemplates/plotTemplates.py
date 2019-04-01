@@ -24,8 +24,13 @@ if region=='SR': pfix='templates_'
 elif region=='WJCR': pfix='wjets_'
 elif region=='TTCR': pfix='ttbar_'
 if not isCategorized: pfix='kinematics_'+region+'_'
-templateDir=os.getcwd()+'/'+pfix+'2019_3_6/'+cutString+'/' #same from doTemplates
+#templateDir=os.getcwd()+'/'+pfix+'2019_3_6/'+cutString+'/' #same from doTemplates
 #templateDir = os.getcwd()+'/'+'kinematics_PS_minMlb_TEST_2019_2_13'+'/'+cutString + '/'
+#templateDir=os.getcwd()+'/'+pfix+'2019_3_22/'+cutString+'/' #same from doTemplates #testing 30 GeV sample
+#templateDir=os.getcwd()+'/'+pfix+'2019_3_23/'+cutString+'/' #same from doTemplates #testing 20 GeV sample
+#templateDir = os.getcwd()+'/'+pfix+'2019_3_29/'+cutString+'/'
+#templateDir = os.getcwd()+'/'+pfix+'2019_3_30/'+cutString+'/'
+templateDir = os.getcwd()+'/'+pfix+'2019_3_31/'+cutString+'/'
 print 'templateDir is:', templateDir
 postFitFile=os.getcwd()+'/../thetaLimits/chi2test_2017_2_12/histos-mle.root'
 plotPostFit = False #this is not working yet!!
