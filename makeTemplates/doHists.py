@@ -20,7 +20,8 @@ lumiStr = str(targetlumi/1000).replace('.','p') # 1/fb
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032219_step2_30GeV/nominal' #testing 30 GeV sample 2019_3_22
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032219_step2_20GeV/nominal' #testing 20 GeV sample 2019_3_23
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032719_step2/nominal' # based on 30 GeV sample that Sinan began with
-step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_033119_step2/nominal' #updated so that all the branches should be filled
+#step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_033119_step2/nominal' #updated so that all the branches should be filled
+step1Dir ='/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_033119_step1hadds/nominal'
 
 """
 Note: 
@@ -33,13 +34,18 @@ where <shape> is for example "JECUp". hadder.py can be used to prepare input fil
 """
 
 bkgList = [
-		  'DY','WJetsMG400','WJetsMG600','WJetsMG800','WJetsMG1200','WJetsMG2500',
+		  #'DY',
+		  'DYMG',
+		 'WJetsMG200', 'WJetsMG400','WJetsMG600','WJetsMG800','WJetsMG1200','WJetsMG2500', 
 		  'TTJetsHad0','TTJetsHad700','TTJetsHad1000',
 		  'TTJetsSemiLep0', 'TTJetsSemiLep700','TTJetsSemiLep1000',
 	 	  'TTJets2L2nu0','TTJets2L2nu700','TTJets2L2nu1000',
 		  'TTJetsPH700mtt','TTJetsPH1000mtt',
-		  'Ts','Tt','Tbt','TtW','TbtW','TTWl','TTZl',
-		  #'QCDht100','QCDht200', 
+		  'Ts','Tt','Tbt','TtW','TbtW', 'Tbs', 'TTH', 'TTZ', 'TTW',
+		  #'TTWl','TTZl',
+                  'WW', 'WZ', 'ZZ',
+		  #'QCDht100',
+		  'QCDht200', 
 		  'QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000',
 		  ]
 
@@ -53,7 +59,7 @@ elif whichSignal=='TT': decays = ['BWBW','THTH','TZTZ','TZBW','THBW','TZTH'] #T'
 elif whichSignal=='BB': decays = ['TWTW','BHBH','BZBZ','BZTW','BHTW','BZBH'] #B' decays
 else: decays = [''] #decays to tWtW 100% of the time
 
-iPlot = 'HT_woBESTjet' #choose a discriminant from plotList below!
+iPlot = 'HT' #choose a discriminant from plotList below!
 if len(sys.argv)>2: iPlot=sys.argv[2]
 region = 'PS'
 if len(sys.argv)>3: region=sys.argv[3]
@@ -250,7 +256,7 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
 # 	
 # 	'NJets_vs_NBJets':('NJets_JetSubCalc:NJetsCSV_JetSubCalc',linspace(0, 15, 16).tolist(),';AK4 jet multiplicity',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
 # 
-# 	'HT':('AK4HT',linspace(0, 4000, 101).tolist(),';H_{T} [GeV]'),
+ 	'HT':('AK4HT',linspace(0, 4000, 101).tolist(),';H_{T} [GeV]'),
 # 	'ST':('AK4HTpMETpLepPt',linspace(0, 4000, 101).tolist(),';S_{T} [GeV]'),
 # # 	'minMlb':('minMleppBjet',linspace(0, 1000, 51).tolist(),';min[M(l,b)] [GeV]'),
 # # 	'HT':('AK4HT',linspace(450, 4000, 711).tolist(),';H_{T} [GeV]'),

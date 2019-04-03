@@ -28,14 +28,15 @@ if not isCategorized: pfix='kinematics_'+region+'_'
 #pfix+='2019_3_27' #additional variables to use with BDT/NN added 2019_3_27
 #pfix+='2019_3_29' #additional variables to use with BDT/NN added 2019_3_29
 #pfix+='2019_3_30' #additional variables to use with BDT/NN added 2019_3_30
-pfix+='2019_3_31' #still missing the minMleppJet branch but want to ask Jangbae a question about this
+pfix+='HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00' #still missing the minMleppJet branch but want to ask Jangbae a question about this
+print 'pfix is:', pfix
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
 scaleSignalXsecTo1pb = True # this has to be "True" if you are making templates for limit calculation!!!!!!!!
 scaleLumi = False
 lumiScaleCoeff = 36200./36459.
 doAllSys = False
-doQ2sys = False
+doQ2sys = False #even if you set doAllSys to true, you need to set the doQ2sys to True as well. I will probably care about this eventually because this a top thing
 if not doAllSys: doQ2sys = False
 addCRsys = False
 systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','toppt','ht','muR','muF','muRFcorrd','trigeff','btag','mistag']
@@ -46,24 +47,24 @@ doJetRwt= 0
 bkgGrupList = ['top','ewk','qcd']
 bkgProcList = ['TTJets','T','TTV','WJets','ZJets','qcd']
 bkgProcs = {}
-bkgProcs['WJets']  = ['WJetsMG400','WJetsMG600','WJetsMG800','WJetsMG1200','WJetsMG2500',]
+bkgProcs['WJets']  = ['WJetsMG200','WJetsMG400','WJetsMG600','WJetsMG800','WJetsMG1200','WJetsMG2500',]
 if doJetRwt: bkgProcs['WJets'] = [proc+'JSF' for proc in bkgProcs['WJets']] 
-bkgProcs['ZJets']  = ['DY']
-bkgProcs['VV']     = []#'WW','WZ','ZZ']
+bkgProcs['ZJets']  = ['DYMG']
+bkgProcs['VV']     = ['WW','WZ','ZZ']
 bkgProcs['TTJets'] = ['TTJetsHad0','TTJetsHad700','TTJetsHad1000','TTJetsSemiLep0','TTJetsSemiLep700','TTJetsSemiLep1000','TTJets2L2nu0','TTJets2L2nu700','TTJets2L2nu1000','TTJetsPH700mtt','TTJetsPH1000mtt']
-bkgProcs['T'] = ['Ts','Tt','Tbt','TtW','TbtW']
-bkgProcs['TTV'] = ['TTWl','TTZl']
-bkgProcs['qcd'] = ['QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000']
+bkgProcs['T'] = ['Ts','Tt','Tbt','TtW','TbtW', 'Tbs']
+bkgProcs['TTV'] = ['TTW','TTZ', 'TTH']
+bkgProcs['qcd'] = ['QCDht200','QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000']
 if doJetRwt: bkgProcs['qcd'] = [proc+'JSF' for proc in bkgProcs['qcd']] 
-bkgProcs['top'] = bkgProcs['TTJets']+bkgProcs['T']
+bkgProcs['top'] = bkgProcs['TTJets']+bkgProcs['T']+bkgProcs['TTV']
 bkgProcs['ewk'] = bkgProcs['WJets']+bkgProcs['ZJets']+bkgProcs['VV'] 
 dataList = ['DataERRBCDEF','DataMRRBCDEF']
-
+#these are about unc so I am not considering them now
 htProcs = ['ewk','WJets']
 topptProcs = ['top','TTJets']
 bkgProcs['top_q2up'] = bkgProcs['T']+['TTJetsPHQ2U']#'TtWQ2U','TbtWQ2U']
 bkgProcs['top_q2dn'] = bkgProcs['T']+['TTJetsPHQ2D']#'TtWQ2D','TbtWQ2D']
-
+#end section about unc
 whichSignal = '4T' #HTB, TT, BB, or X53X53
 massList = [690]#range(800,1600+1,100)
 if region=='PS': massList = [690]
@@ -619,5 +620,3 @@ for iPlot in iPlotList:
 	makeThetaCats(datahists,sighists,bkghists,iPlot)
 
 print("--- %s minutes ---" % (round((time.time() - start_time)/60,2)))
-
-
