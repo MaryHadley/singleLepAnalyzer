@@ -17,7 +17,7 @@ lumiInTemplates= str(targetlumi/1000).replace('.','p') # 1/fb
 
 region='PS' #PS,SR,TTCR,WJCR
 isCategorized=0
-iPlot='minMlb'
+iPlot='HT'
 if len(sys.argv)>1: iPlot=str(sys.argv[1])
 cutString='' #might have to change back
 if region=='SR': pfix='templates_'
@@ -30,7 +30,10 @@ if not isCategorized: pfix='kinematics_'+region+'_'
 #templateDir=os.getcwd()+'/'+pfix+'2019_3_23/'+cutString+'/' #same from doTemplates #testing 20 GeV sample
 #templateDir = os.getcwd()+'/'+pfix+'2019_3_29/'+cutString+'/'
 #templateDir = os.getcwd()+'/'+pfix+'2019_3_30/'+cutString+'/'
-templateDir = os.getcwd()+'/'+pfix+'2019_3_31/'+cutString+'/'
+#templateDir = os.getcwd()+'/'+pfix+'2019_3_31/'+cutString+'/'
+#templateDir = os.getcwd()+'/'+'kinematics_PS_HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00/'
+#templateDir = os.getcwd()+'/'+pfix+'2019_4_3/'+cutString+'/'
+templateDir = os.getcwd()+'/'+pfix+'2019_4_4/'+cutString+'/'
 print 'templateDir is:', templateDir
 postFitFile=os.getcwd()+'/../thetaLimits/chi2test_2017_2_12/histos-mle.root'
 plotPostFit = False #this is not working yet!!
@@ -52,10 +55,13 @@ if '53' in sig1 or '4T' in sig1: bkgHistColors = {'top':rt.kRed-9,'ewk':rt.kBlue
 elif 'HTB' in sig1: bkgHistColors = {'ttbar':rt.kGreen-3,'wjets':rt.kPink-4,'top':rt.kAzure+8,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5} #HTB
 else: bkgHistColors = {'top':rt.kAzure+8,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5} #TT
 
-systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','trigeff','ht',
-				  'btag','mistag','pdfNew','muRFcorrdNew','toppt']
+#systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','trigeff','ht',
+#				  'btag','mistag','pdfNew','muRFcorrdNew','toppt']
+
+systematicList = ['muRFcorrd']
+
 if 'muRFcorrdNew' not in systematicList: saveKey='_noQ2'
-doAllSys = False
+doAllSys = True
 doQ2sys  = False
 if not doAllSys: doQ2sys = False
 addCRsys = False
@@ -64,7 +70,7 @@ if 'rebinned' not in isRebinned or 'stat1p1' in isRebinned: doNormByBinWidth=Fal
 doOneBand = False
 if not doAllSys: doOneBand = True # Don't change this!
 blind = False #ok because we are in preselection!!!
-yLog  = False
+yLog  = True
 if yLog: scaleSignals = False
 doRealPull = False #if we put this to False, will just do data/MC #if True, does (obs-bkg)/uncert
 if doRealPull: doOneBand=False

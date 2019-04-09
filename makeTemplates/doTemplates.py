@@ -28,18 +28,22 @@ if not isCategorized: pfix='kinematics_'+region+'_'
 #pfix+='2019_3_27' #additional variables to use with BDT/NN added 2019_3_27
 #pfix+='2019_3_29' #additional variables to use with BDT/NN added 2019_3_29
 #pfix+='2019_3_30' #additional variables to use with BDT/NN added 2019_3_30
-pfix+='HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00' #still missing the minMleppJet branch but want to ask Jangbae a question about this
+#pfix+='HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00' #still missing the minMleppJet branch but want to ask Jangbae a question about this
+#pfix+="2019_4_3"
+pfix+='2019_4_4'
 print 'pfix is:', pfix
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
 scaleSignalXsecTo1pb = True # this has to be "True" if you are making templates for limit calculation!!!!!!!!
 scaleLumi = False
 lumiScaleCoeff = 36200./36459.
-doAllSys = False
-doQ2sys = False #even if you set doAllSys to true, you need to set the doQ2sys to True as well. I will probably care about this eventually because this a top thing
+doAllSys = True
+doQ2sys = False#even if you set doAllSys to true, you need to set the doQ2sys to True as well. I will probably care about this eventually because this a top thing
+#actually according to julie maybe not, this is dead and defunct...so who knows 
 if not doAllSys: doQ2sys = False
 addCRsys = False
-systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','toppt','ht','muR','muF','muRFcorrd','trigeff','btag','mistag']
+#systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','toppt','ht','muR','muF','muRFcorrd','trigeff','btag','mistag']
+systematicList = ['muRFcorrd',] #muRFcorrd #hack to just run muRFcorrd, mary change with julie
 normalizeRENORM_PDF = False #normalize the renormalization/pdf uncertainties to nominal templates --> normalizes signal processes only !!!!
 rebinBy = -1 #performs a regular rebinning with "Rebin(rebinBy)", put -1 if rebinning is not wanted
 
@@ -186,17 +190,17 @@ def makeThetaCats(datahists,sighists,bkghists,discriminant):
 								htemp = sighists[histoPrefix.replace(discriminant,discriminant+syst+ud)+'_'+signal+decay].Clone()
 								if doBRScan: htemp.Scale(BRs[decay[:2]][BRind]*BRs[decay[2:]][BRind]/(BR[decay[:2]]*BR[decay[2:]]))
 								if decay!=decays[0]: hists[signal+i+syst+ud].Add(htemp)
-				for pdfInd in range(100):
-					for proc in bkgProcList+bkgGrupList:
-						hists[proc+i+'pdf'+str(pdfInd)] = bkghists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+bkgProcs[proc][0]].Clone(histoPrefix+'__'+proc+'__pdf'+str(pdfInd))
-						for bkg in bkgProcs[proc]:
-							if bkg!=bkgProcs[proc][0]: hists[proc+i+'pdf'+str(pdfInd)].Add(bkghists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+bkg])
-					for signal in sigList:
-						hists[signal+i+'pdf'+str(pdfInd)] = sighists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+signal+decays[0]].Clone(histoPrefix+'__sig__pdf'+str(pdfInd))
-						if doBRScan: hists[signal+i+'pdf'+str(pdfInd)].Scale(BRs[decays[0][:2]][BRind]*BRs[decays[0][2:]][BRind]/(BR[decays[0][:2]]*BR[decays[0][2:]]))
-						for decay in decays:
-							htemp = sighists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+signal+decay].Clone()
-							if doBRScan: htemp.Scale(BRs[decay[:2]][BRind]*BRs[decay[2:]][BRind]/(BR[decay[:2]]*BR[decay[2:]]))
+				#for pdfInd in range(100):
+				#	for proc in bkgProcList+bkgGrupList:
+				#		hists[proc+i+'pdf'+str(pdfInd)] = bkghists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+bkgProcs[proc][0]].Clone(histoPrefix+'__'+proc+'__pdf'+str(pdfInd))
+				#		for bkg in bkgProcs[proc]:
+				#			if bkg!=bkgProcs[proc][0]: hists[proc+i+'pdf'+str(pdfInd)].Add(bkghists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+bkg])
+				#	for signal in sigList:
+				#		hists[signal+i+'pdf'+str(pdfInd)] = sighists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+signal+decays[0]].Clone(histoPrefix+'__sig__pdf'+str(pdfInd))
+				#		if doBRScan: hists[signal+i+'pdf'+str(pdfInd)].Scale(BRs[decays[0][:2]][BRind]*BRs[decays[0][2:]][BRind]/(BR[decays[0][:2]]*BR[decays[0][2:]]))
+				#		for decay in decays:
+				#			htemp = sighists[histoPrefix.replace(discriminant,discriminant+'pdf'+str(pdfInd))+'_'+signal+decay].Clone()
+				#			if doBRScan: htemp.Scale(BRs[decay[:2]][BRind]*BRs[decay[2:]][BRind]/(BR[decay[:2]]*BR[decay[2:]]))
 							if decay!=decays[0]:hists[signal+i+'pdf'+str(pdfInd)].Add(htemp)
 											
 			if doQ2sys:
@@ -253,8 +257,8 @@ def makeThetaCats(datahists,sighists,bkghists,discriminant):
 							if normalizeRENORM_PDF and (syst.startswith('mu') or syst=='pdf'):
 								hists[signal+i+syst+'Up'].Scale(hists[signal+i].Integral()/hists[signal+i+syst+'Up'].Integral())
 								hists[signal+i+syst+'Down'].Scale(hsihistsg[signal+i].Integral()/hists[signal+i+syst+'Down'].Integral())
-						for pdfInd in range(100): 
-							hists[signal+i+'pdf'+str(pdfInd)].Scale(1./xsec[signal])
+						#for pdfInd in range(100): 
+						#	hists[signal+i+'pdf'+str(pdfInd)].Scale(1./xsec[signal])
 
 		nbins = str(int(hists['data'+i].GetXaxis().GetNbins()))
 		#Theta templates:
@@ -274,7 +278,7 @@ def makeThetaCats(datahists,sighists,bkghists,discriminant):
 								if syst=='ht' and proc not in htProcs: continue
 								hists[proc+i+syst+'Up'].Write()
 								hists[proc+i+syst+'Down'].Write()
-							for pdfInd in range(100): hists[proc+i+'pdf'+str(pdfInd)].Write()
+					#		for pdfInd in range(100): hists[proc+i+'pdf'+str(pdfInd)].Write()
 						if doQ2sys:
 							if proc+'_q2up' not in bkgProcs.keys(): continue
 							hists[proc+i+'q2Up'].Write()
@@ -301,9 +305,9 @@ def makeThetaCats(datahists,sighists,bkghists,discriminant):
 						hists[signal+i+syst+'Down'].SetName(hists[signal+i+syst+'Down'].GetName().replace('fb_','fb_'+postTag).replace('__sig','__'+signal.replace('M'+mass,'')+'M'+mass).replace('__minus','Down'))
 						hists[signal+i+syst+'Up'].Write()
 						hists[signal+i+syst+'Down'].Write()
-					for pdfInd in range(100): 
-						hists[signal+i+'pdf'+str(pdfInd)].SetName(hists[signal+i+'pdf'+str(pdfInd)].GetName().replace('fb_','fb_'+postTag).replace('__sig','__'+signal.replace('M'+mass,'')+'M'+mass))
-						hists[signal+i+'pdf'+str(pdfInd)].Write()
+				#	for pdfInd in range(100): 
+				#		hists[signal+i+'pdf'+str(pdfInd)].SetName(hists[signal+i+'pdf'+str(pdfInd)].GetName().replace('fb_','fb_'+postTag).replace('__sig','__'+signal.replace('M'+mass,'')+'M'+mass))
+				#		hists[signal+i+'pdf'+str(pdfInd)].Write()
 			for proc in bkgGrupList:
 				hists[proc+i].SetName(hists[proc+i].GetName().replace('fb_','fb_'+postTag))
 				hists[proc+i].Write()
@@ -315,9 +319,9 @@ def makeThetaCats(datahists,sighists,bkghists,discriminant):
 						hists[proc+i+syst+'Down'].SetName(hists[proc+i+syst+'Down'].GetName().replace('fb_','fb_'+postTag).replace('__minus','Down'))
 						hists[proc+i+syst+'Up'].Write()
 						hists[proc+i+syst+'Down'].Write()
-					for pdfInd in range(100): 
-						hists[proc+i+'pdf'+str(pdfInd)].SetName(hists[proc+i+'pdf'+str(pdfInd)].GetName().replace('fb_','fb_'+postTag))
-						hists[proc+i+'pdf'+str(pdfInd)].Write()
+				#	for pdfInd in range(100): 
+				#		hists[proc+i+'pdf'+str(pdfInd)].SetName(hists[proc+i+'pdf'+str(pdfInd)].GetName().replace('fb_','fb_'+postTag))
+				#		hists[proc+i+'pdf'+str(pdfInd)].Write()
 				if doQ2sys:
 					if proc+'_q2up' not in bkgProcs.keys(): continue
 					hists[proc+i+'q2Up'].SetName(hists[proc+i+'q2Up'].GetName().replace('fb_','fb_'+postTag).replace('__plus','Up'))

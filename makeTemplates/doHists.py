@@ -21,7 +21,9 @@ lumiStr = str(targetlumi/1000).replace('.','p') # 1/fb
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032219_step2_20GeV/nominal' #testing 20 GeV sample 2019_3_23
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032719_step2/nominal' # based on 30 GeV sample that Sinan began with
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_033119_step2/nominal' #updated so that all the branches should be filled
-step1Dir ='/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_033119_step1hadds/nominal'
+#step1Dir ='/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_033119_step1hadds/nominal' #used to test updated singleLepAnalyzer
+step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_040319_step2/nominal' #step2Dir, actually, in this case
+
 
 """
 Note: 
@@ -67,8 +69,9 @@ isCategorized = 0
 if len(sys.argv)>4: isCategorized=int(sys.argv[4])
 isotrig = 1
 doJetRwt= 0
-doAllSys= False
+doAllSys= True
 doQ2sys = False
+#this list is defunct, and do Q2sys is always dead
 q2List  = [#energy scale sample to be processed
 	       'TTJetsPHQ2U','TTJetsPHQ2D',
 	       ]
@@ -125,7 +128,9 @@ def readTree(file):
 	return tFile, tTree 
 
 print "READING TREES"
-shapesFiles = ['jec','jer']
+#shapesFiles = ['jec','jer']
+shapesFiles = []
+#shapesFiles = ['muRFcorrd'] #these don't come from shapes files, things like jec and jer come from shapes files!!
 tTreeData = {}
 tFileData = {}
 for data in dataList:
@@ -169,122 +174,122 @@ print "FINISHED READING"
 bigbins = [0,50,100,125,150,175,200,225,250,275,300,325,350,375,400,450,500,600,700,800,900,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,5000]
 
 plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
-	# 'deltaRAK8':('minDR_leadAK8otherAK8',linspace(0,5,51).tolist(),';min #DeltaR(1^{st} AK8 jet, other AK8 jet)'),
-# 	'MTlmet':('MT_lepMet',linspace(0,250,51).tolist(),';M_{T}(l,#slash{E}_{T}) [GeV]'),
-# 	'NPV'   :('nPV_singleLepCalc',linspace(0, 60, 61).tolist(),';PV multiplicity'),
-# 	'nTrueInt':('nTrueInteractions_singleLepCalc',linspace(0, 75, 76).tolist(),';# true interactions'),
-# 	'lepPt' :('leptonPt_singleLepCalc',linspace(0, 1000, 51).tolist(),';Lepton p_{T} [GeV]'),
-# 	'lepEta':('leptonEta_singleLepCalc',linspace(-4, 4, 41).tolist(),';Lepton #eta'),
-# 	'JetEta':('theJetEta_JetSubCalc_PtOrdered',linspace(-4, 4, 41).tolist(),';AK4 jet #eta'),
-# 	'JetPt' :('theJetPt_JetSubCalc_PtOrdered',linspace(0, 800, 81).tolist(),';jet p_{T} [GeV]'),
-# 	'Jet1Pt':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0, 800, 81).tolist(),';p_{T}(j_{1}) [GeV]'),
-# 	'Jet2Pt':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0, 800, 81).tolist(),';p_{T}(j_{2}) [GeV]'),
-# 	'Jet3Pt':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0, 800, 81).tolist(),';p_{T}(j_{3}) [GeV]'),
-# 	'Jet4Pt':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0, 300, 31).tolist(),';p_{T}(j_{4}) [GeV]'),
-# 	'Jet5Pt':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0, 300, 31).tolist(),';p_{T}(j_{5}) [GeV]'),
-# 	'Jet6Pt':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0, 300, 31).tolist(),';p_{T}(j_{6}) [GeV]'),
-# 	'JetPtBins' :('theJetPt_JetSubCalc_PtOrdered',linspace(0,2000,21).tolist(),';AK4 jet p_{T} [GeV]'),
-# 	'Jet1PtBins':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0,2000,21).tolist(),';p_{T}(j_{1}) [GeV]'),
-# 	'Jet2PtBins':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0,2000,21).tolist(),';p_{T}(j_{2}) [GeV]'),
-# 	'Jet3PtBins':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0,2000,21).tolist(),';p_{T}(j_{3}) [GeV]'),
-# 	'Jet4PtBins':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0,2000,21).tolist(),';p_{T}(j_{4}) [GeV]'),
-# 	'Jet5PtBins':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0,2000,21).tolist(),';p_{T}(j_{5}) [GeV]'),
-# 	'Jet6PtBins':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0,2000,21).tolist(),';p_{T}(j_{6}) [GeV]'),
-# 	'MET'   :('corr_met_singleLepCalc',linspace(0, 1500, 51).tolist(),';#slash{E}_{T} [GeV]'),
-# 	'NJets' :('NJets_JetSubCalc',linspace(0, 15, 16).tolist(),';AK4 jet multiplicity'),
-# 	'NBJets':('NJetsCSVwithSF_JetSubCalc',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
-# 	'NBJetsNoSF':('NJetsCSV_JetSubCalc',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
-# 	'NWJets':('NPuppiWtagged_0p55_notTtagged',linspace(0, 6, 7).tolist(),';W-tagged jet multiplicity'),
-# 	'NTJets':('NJetsTtagged_0p81',linspace(0, 4, 5).tolist(),';t-tagged jet multiplicity'),
-# 	'NJetsAK8':('NJetsAK8_JetSubCalc',linspace(0, 8, 9).tolist(),';AK8 jet multiplicity'),
-# 	'JetPtAK8':('theJetAK8Pt_JetSubCalc_PtOrdered',linspace(0, 1500, 51).tolist(),';AK8 jet p_{T} [GeV]'),
-# 	'JetPtBinsAK8':('theJetAK8Pt_JetSubCalc_PtOrdered',bigbins,';AK8 jet p_{T} [GeV];'),
-# 	'JetEtaAK8':('theJetAK8Eta_JetSubCalc_PtOrdered',linspace(-4, 4, 41).tolist(),';AK8 jet #eta'),
-# 	'Tau21'  :('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered/theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{2}/#tau_{1}'),
-# 	'Tau21Nm1'  :('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered/theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{2}/#tau_{1}'),
-# 	'Tau32'  :('theJetAK8NjettinessTau3_JetSubCalc_PtOrdered/theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{3}/#tau_{2}'),
-# 	'Tau32Nm1'  :('theJetAK8NjettinessTau3_JetSubCalc_PtOrdered/theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{3}/#tau_{2}'),
-# 	'Pruned' :('theJetAK8PrunedMass_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
-# 	'PrunedSmeared' :('theJetAK8PrunedMass_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
-# 	'PrunedSmearedNm1' :('theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
-# 	'SoftDropMass' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
-# 	'SoftDropMassNm1W' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
-# 	'SoftDropMassNm1t' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
+	'deltaRAK8':('minDR_leadAK8otherAK8',linspace(0,5,51).tolist(),';min #DeltaR(1^{st} AK8 jet, other AK8 jet)'),
+	'MTlmet':('MT_lepMet',linspace(0,250,51).tolist(),';M_{T}(l,#slash{E}_{T}) [GeV]'),
+	'NPV'   :('nPV_singleLepCalc',linspace(0, 60, 61).tolist(),';PV multiplicity'),
+	'nTrueInt':('nTrueInteractions_singleLepCalc',linspace(0, 75, 76).tolist(),';# true interactions'),
+	'lepPt' :('leptonPt_singleLepCalc',linspace(0, 1000, 51).tolist(),';Lepton p_{T} [GeV]'),
+	'lepEta':('leptonEta_singleLepCalc',linspace(-4, 4, 41).tolist(),';Lepton #eta'),
+	'JetEta':('theJetEta_JetSubCalc_PtOrdered',linspace(-4, 4, 41).tolist(),';AK4 jet #eta'),
+	'JetPt' :('theJetPt_JetSubCalc_PtOrdered',linspace(0, 800, 81).tolist(),';jet p_{T} [GeV]'),
+	'Jet1Pt':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0, 800, 81).tolist(),';p_{T}(j_{1}) [GeV]'),
+	'Jet2Pt':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0, 800, 81).tolist(),';p_{T}(j_{2}) [GeV]'),
+	'Jet3Pt':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0, 800, 81).tolist(),';p_{T}(j_{3}) [GeV]'),
+	'Jet4Pt':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0, 300, 31).tolist(),';p_{T}(j_{4}) [GeV]'),
+	'Jet5Pt':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0, 300, 31).tolist(),';p_{T}(j_{5}) [GeV]'),
+	'Jet6Pt':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0, 300, 31).tolist(),';p_{T}(j_{6}) [GeV]'),
+	'JetPtBins' :('theJetPt_JetSubCalc_PtOrdered',linspace(0,2000,21).tolist(),';AK4 jet p_{T} [GeV]'),
+	'Jet1PtBins':('theJetPt_JetSubCalc_PtOrdered[0]',linspace(0,2000,21).tolist(),';p_{T}(j_{1}) [GeV]'),
+	'Jet2PtBins':('theJetPt_JetSubCalc_PtOrdered[1]',linspace(0,2000,21).tolist(),';p_{T}(j_{2}) [GeV]'),
+	'Jet3PtBins':('theJetPt_JetSubCalc_PtOrdered[2]',linspace(0,2000,21).tolist(),';p_{T}(j_{3}) [GeV]'),
+	'Jet4PtBins':('theJetPt_JetSubCalc_PtOrdered[3]',linspace(0,2000,21).tolist(),';p_{T}(j_{4}) [GeV]'),
+	'Jet5PtBins':('theJetPt_JetSubCalc_PtOrdered[4]',linspace(0,2000,21).tolist(),';p_{T}(j_{5}) [GeV]'),
+	'Jet6PtBins':('theJetPt_JetSubCalc_PtOrdered[5]',linspace(0,2000,21).tolist(),';p_{T}(j_{6}) [GeV]'),
+	'MET'   :('corr_met_singleLepCalc',linspace(0, 1500, 51).tolist(),';#slash{E}_{T} [GeV]'),
+	'NJets' :('NJets_JetSubCalc',linspace(0, 15, 16).tolist(),';AK4 jet multiplicity'),
+	'NBJets':('NJetsCSVwithSF_JetSubCalc',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
+	'NBJetsNoSF':('NJetsCSV_JetSubCalc',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
+	'NWJets':('NPuppiWtagged_0p55_notTtagged',linspace(0, 6, 7).tolist(),';W-tagged jet multiplicity'),
+	'NTJets':('NJetsTtagged_0p81',linspace(0, 4, 5).tolist(),';t-tagged jet multiplicity'),
+	'NJetsAK8':('NJetsAK8_JetSubCalc',linspace(0, 8, 9).tolist(),';AK8 jet multiplicity'),
+	'JetPtAK8':('theJetAK8Pt_JetSubCalc_PtOrdered',linspace(0, 1500, 51).tolist(),';AK8 jet p_{T} [GeV]'),
+	'JetPtBinsAK8':('theJetAK8Pt_JetSubCalc_PtOrdered',bigbins,';AK8 jet p_{T} [GeV];'),
+	'JetEtaAK8':('theJetAK8Eta_JetSubCalc_PtOrdered',linspace(-4, 4, 41).tolist(),';AK8 jet #eta'),
+	'Tau21'  :('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered/theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{2}/#tau_{1}'),
+	'Tau21Nm1'  :('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered/theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{2}/#tau_{1}'),
+	'Tau32'  :('theJetAK8NjettinessTau3_JetSubCalc_PtOrdered/theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{3}/#tau_{2}'),
+	'Tau32Nm1'  :('theJetAK8NjettinessTau3_JetSubCalc_PtOrdered/theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0, 1, 51).tolist(),';AK8 jet #tau_{3}/#tau_{2}'),
+	'Pruned' :('theJetAK8PrunedMass_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
+	'PrunedSmeared' :('theJetAK8PrunedMass_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
+	'PrunedSmearedNm1' :('theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet pruned mass [GeV]'),
+	'SoftDropMass' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
+	'SoftDropMassNm1W' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
+	'SoftDropMassNm1t' :('theJetAK8SoftDropCorr_JetSubCalc_PtOrdered',linspace(0, 500, 51).tolist(),';AK8 jet soft-drop mass [GeV]'),
  	'mindeltaR':('minDR_lepJet',linspace(0, 5, 51).tolist(),';#DeltaR(l, closest jet)'),
-# 	'deltaRjet1':('deltaR_lepJets[0]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{1})'),
-# 	'deltaRjet2':('deltaR_lepJets[1]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{2})'),
-# 	'deltaRjet3':('deltaR_lepJets[2]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{3})'),
-# 	'nLepGen':('NLeptonDecays_TpTpCalc',linspace(0,10,11).tolist(),';N lepton decays from TT'),
-# 	'METphi':('corr_met_phi_singleLepCalc',linspace(-3.2,3.2,65).tolist(),';#phi(#slash{E}_{T})'),
-# 	'lepPhi':('leptonPhi_singleLepCalc',linspace(-3.2,3.2,65).tolist(),';#phi(l)'),
-# 	'lepDxy':('leptonDxy_singleLepCalc',linspace(-0.02,0.02,51).tolist(),';lepton xy impact param [cm]'),
-# 	'lepDz':('leptonDz_singleLepCalc',linspace(-0.1,0.1,51).tolist(),';lepton z impact param [cm]'),
-# 	'lepCharge':('leptonCharge_singleLepCalc',linspace(-2,2,5).tolist(),';lepton charge'),
-# 	'lepIso':('leptonMiniIso_singleLepCalc',linspace(0,0.1,51).tolist(),';lepton mini isolation'),
-# 	'Tau1':('theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0,1,51).tolist(),';AK8 Jet #tau_{1}'),
-# 	'Tau2':('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0,1,51).tolist(),';AK8 Jet #tau_{2}'),
-# 	'JetPhi':('theJetPhi_JetSubCalc_PtOrdered',linspace(-3.2,3.2,65).tolist(),';AK4 Jet #phi'),
-# 	'JetPhiAK8':('theJetAK8Phi_JetSubCalc_PtOrdered',linspace(-3.2,3.2,65).tolist(),';AK8 Jet #phi'),
-# 	'Bjet1Pt':('BJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(b_{1}) [GeV]'),  ## B TAG
-# 	'Wjet1Pt':('WJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(W_{1}) [GeV]'),
-# 	'Tjet1Pt':('TJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(t_{1}) [GeV]'),
-# 	'topMass':('topMass',linspace(0,1500,51).tolist(),';M^{rec}(t) [GeV]'),
-# 	'topPt':('topPt',linspace(0,1500,51).tolist(),';p_{T}^{rec}(t) [GeV]'),
-# 	'minMlj':('minMleppJet',linspace(0,1000,51).tolist(),';min[M(l,j)] [GeV], j #neq b'),
-# 	'minMljDR':('deltaRlepJetInMinMljet',linspace(0,5,51).tolist(),';#DeltaR(l,j) with min[M(l,j)], j #neq b'),
-# 	'minMljDPhi':('deltaPhilepJetInMinMljet',linspace(0,5,51).tolist(),';#Delta#phi(l,jet) with min[M(l,j)], j #neq b'),
-# 	'minMlbDR':('deltaRlepbJetInMinMlb',linspace(0,5,51).tolist(),';#DeltaR(l,b) with min[M(l,b)]'), ## B TAG
-# 	'minMlbDPhi':('deltaPhilepbJetInMinMlb',linspace(0,5,51).tolist(),';#Delta#phi(l,b) with min[M(l,b)]'), ## B TAG
-# 	'nonMinMlbDR':('deltaRlepbJetNotInMinMlb',linspace(0,5,51).tolist(),';#DeltaR(l,b), b #neq b in min[M(l,b)]'),  ## B TAG
-# 	'MWb1':('M_taggedW_bjet1',linspace(0,1000,51).tolist(),';M(W_{jet},b_{1}) [GeV]'), ## B TAG
-# 	'MWb2':('M_taggedW_bjet2',linspace(0,1000,51).tolist(),';M(W_{jet},b_{2}) [GeV]'), ## 2 B TAG
-# 	'deltaRlb1':('deltaRlepbJet1',linspace(0,5,51).tolist(),';#DeltaR(l,b_{1})'), ## B TAG
-# 	'deltaRlb2':('deltaRlepbJet2',linspace(0,5,51).tolist(),';#DeltaR(l,b_{2})'), ## 2 B TAG
-# 	'deltaRtW':('deltaRtopWjet',linspace(0,5,51).tolist(),';#DeltaR(reco t, W jet)'),
-# 	'deltaRlW':('deltaRlepWjet',linspace(0,5,51).tolist(),';#DeltaR(l,W_{jet})'),
-# 	'deltaRWb1':('deltaRtaggedWbJet1',linspace(0,5,51).tolist(),';#DeltaR(W_{jet},b_{1})'), ## B TAG
-# 	'deltaRWb2':('deltaRtaggedWbJet2',linspace(0,5,51).tolist(),';#DeltaR(W_{jet},b_{2})'), ## 2 B TAG
-# 	'deltaPhilb1':('deltaPhilepbJet1',linspace(0,5,51).tolist(),';#Delta#phi(l,b_{1})'), ## B TAG
-# 	'deltaPhilb2':('deltaPhilepbJet2',linspace(0,5,51).tolist(),';#Delta#phi(l,b_{2})'), ## 2 B TAG
-# 	'deltaPhitW':('deltaPhitopWjet',linspace(0,5,51).tolist(),';#Delta#phi(t_{lep}, W_{jet})'),
-# 	'deltaPhilW':('deltaPhilepWjet',linspace(0,5,51).tolist(),';#Delta#phi(l, W_{jet})'),
-# 	'deltaPhiWb1':('deltaPhitaggedWbJet1',linspace(0,5,51).tolist(),';#Delta#phi(W_{jet},b_{1})'), ## B TAG
-# 	'deltaPhiWb2':('deltaPhitaggedWbJet2',linspace(0,5,51).tolist(),';#Delta#phi(W_{jet},b_{2})'), ## 2 B TAG
-# 	'WjetPt':('WJetTaggedPt',linspace(0,1500,51).tolist(),';p_{T}(W_{jet}) [GeV]'),
+	'deltaRjet1':('deltaR_lepJets[0]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{1})'),
+	'deltaRjet2':('deltaR_lepJets[1]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{2})'),
+	'deltaRjet3':('deltaR_lepJets[2]',linspace(0, 5, 51).tolist(),';#DeltaR(l,j_{3})'),
+	'nLepGen':('NLeptonDecays_TpTpCalc',linspace(0,10,11).tolist(),';N lepton decays from TT'),
+	'METphi':('corr_met_phi_singleLepCalc',linspace(-3.2,3.2,65).tolist(),';#phi(#slash{E}_{T})'),
+	'lepPhi':('leptonPhi_singleLepCalc',linspace(-3.2,3.2,65).tolist(),';#phi(l)'),
+	'lepDxy':('leptonDxy_singleLepCalc',linspace(-0.02,0.02,51).tolist(),';lepton xy impact param [cm]'),
+	'lepDz':('leptonDz_singleLepCalc',linspace(-0.1,0.1,51).tolist(),';lepton z impact param [cm]'),
+	'lepCharge':('leptonCharge_singleLepCalc',linspace(-2,2,5).tolist(),';lepton charge'),
+	'lepIso':('leptonMiniIso_singleLepCalc',linspace(0,0.1,51).tolist(),';lepton mini isolation'),
+	'Tau1':('theJetAK8NjettinessTau1_JetSubCalc_PtOrdered',linspace(0,1,51).tolist(),';AK8 Jet #tau_{1}'),
+	'Tau2':('theJetAK8NjettinessTau2_JetSubCalc_PtOrdered',linspace(0,1,51).tolist(),';AK8 Jet #tau_{2}'),
+	'JetPhi':('theJetPhi_JetSubCalc_PtOrdered',linspace(-3.2,3.2,65).tolist(),';AK4 Jet #phi'),
+	'JetPhiAK8':('theJetAK8Phi_JetSubCalc_PtOrdered',linspace(-3.2,3.2,65).tolist(),';AK8 Jet #phi'),
+	'Bjet1Pt':('BJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(b_{1}) [GeV]'),  ## B TAG
+	'Wjet1Pt':('WJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(W_{1}) [GeV]'),
+	'Tjet1Pt':('TJetLeadPt',linspace(0,1500,51).tolist(),';p_{T}(t_{1}) [GeV]'),
+	'topMass':('topMass',linspace(0,1500,51).tolist(),';M^{rec}(t) [GeV]'),
+	'topPt':('topPt',linspace(0,1500,51).tolist(),';p_{T}^{rec}(t) [GeV]'),
+	'minMlj':('minMleppJet',linspace(0,1000,51).tolist(),';min[M(l,j)] [GeV], j #neq b'),
+	'minMljDR':('deltaRlepJetInMinMljet',linspace(0,5,51).tolist(),';#DeltaR(l,j) with min[M(l,j)], j #neq b'),
+	'minMljDPhi':('deltaPhilepJetInMinMljet',linspace(0,5,51).tolist(),';#Delta#phi(l,jet) with min[M(l,j)], j #neq b'),
+	'minMlbDR':('deltaRlepbJetInMinMlb',linspace(0,5,51).tolist(),';#DeltaR(l,b) with min[M(l,b)]'), ## B TAG
+	'minMlbDPhi':('deltaPhilepbJetInMinMlb',linspace(0,5,51).tolist(),';#Delta#phi(l,b) with min[M(l,b)]'), ## B TAG
+	'nonMinMlbDR':('deltaRlepbJetNotInMinMlb',linspace(0,5,51).tolist(),';#DeltaR(l,b), b #neq b in min[M(l,b)]'),  ## B TAG
+	'MWb1':('M_taggedW_bjet1',linspace(0,1000,51).tolist(),';M(W_{jet},b_{1}) [GeV]'), ## B TAG
+	'MWb2':('M_taggedW_bjet2',linspace(0,1000,51).tolist(),';M(W_{jet},b_{2}) [GeV]'), ## 2 B TAG
+	'deltaRlb1':('deltaRlepbJet1',linspace(0,5,51).tolist(),';#DeltaR(l,b_{1})'), ## B TAG
+	'deltaRlb2':('deltaRlepbJet2',linspace(0,5,51).tolist(),';#DeltaR(l,b_{2})'), ## 2 B TAG
+	'deltaRtW':('deltaRtopWjet',linspace(0,5,51).tolist(),';#DeltaR(reco t, W jet)'),
+	'deltaRlW':('deltaRlepWjet',linspace(0,5,51).tolist(),';#DeltaR(l,W_{jet})'),
+	'deltaRWb1':('deltaRtaggedWbJet1',linspace(0,5,51).tolist(),';#DeltaR(W_{jet},b_{1})'), ## B TAG
+	'deltaRWb2':('deltaRtaggedWbJet2',linspace(0,5,51).tolist(),';#DeltaR(W_{jet},b_{2})'), ## 2 B TAG
+	'deltaPhilb1':('deltaPhilepbJet1',linspace(0,5,51).tolist(),';#Delta#phi(l,b_{1})'), ## B TAG
+	'deltaPhilb2':('deltaPhilepbJet2',linspace(0,5,51).tolist(),';#Delta#phi(l,b_{2})'), ## 2 B TAG
+	'deltaPhitW':('deltaPhitopWjet',linspace(0,5,51).tolist(),';#Delta#phi(t_{lep}, W_{jet})'),
+	'deltaPhilW':('deltaPhilepWjet',linspace(0,5,51).tolist(),';#Delta#phi(l, W_{jet})'),
+	'deltaPhiWb1':('deltaPhitaggedWbJet1',linspace(0,5,51).tolist(),';#Delta#phi(W_{jet},b_{1})'), ## B TAG
+	'deltaPhiWb2':('deltaPhitaggedWbJet2',linspace(0,5,51).tolist(),';#Delta#phi(W_{jet},b_{2})'), ## 2 B TAG
+	'WjetPt':('WJetTaggedPt',linspace(0,1500,51).tolist(),';p_{T}(W_{jet}) [GeV]'),
  	'PtRel':('ptRel_lepJet',linspace(0,500,51).tolist(),';p_{T,rel}(l, closest jet) [GeV]'),
-# 	'deltaPhiLMET':('deltaPhi_lepMET',linspace(-3.2,3.2,51).tolist(),';#Delta#phi(l,#slash{E}_{T})'),
-# 	
-# 	'NJets_vs_NBJets':('NJets_JetSubCalc:NJetsCSV_JetSubCalc',linspace(0, 15, 16).tolist(),';AK4 jet multiplicity',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
-# 
+	'deltaPhiLMET':('deltaPhi_lepMET',linspace(-3.2,3.2,51).tolist(),';#Delta#phi(l,#slash{E}_{T})'),
+	
+	'NJets_vs_NBJets':('NJets_JetSubCalc:NJetsCSV_JetSubCalc',linspace(0, 15, 16).tolist(),';AK4 jet multiplicity',linspace(0, 10, 11).tolist(),';b-tagged jet multiplicity'),
+
  	'HT':('AK4HT',linspace(0, 4000, 101).tolist(),';H_{T} [GeV]'),
-# 	'ST':('AK4HTpMETpLepPt',linspace(0, 4000, 101).tolist(),';S_{T} [GeV]'),
+	'ST':('AK4HTpMETpLepPt',linspace(0, 4000, 101).tolist(),';S_{T} [GeV]'),
 # # 	'minMlb':('minMleppBjet',linspace(0, 1000, 51).tolist(),';min[M(l,b)] [GeV]'),
 # # 	'HT':('AK4HT',linspace(450, 4000, 711).tolist(),';H_{T} [GeV]'),
 # # 	'ST':('AK4HTpMETpLepPt',linspace(650, 4000, 671).tolist(),';S_{T} [GeV]'),
-# 	'minMlb':('minMleppBjet',linspace(0, 1000, 201).tolist(),';min[M(l,b)] [GeV]'),
-# 	'minMlbSBins':('minMleppBjet',linspace(0, 1000, 1001).tolist(),';min[M(l,b)] [GeV]'),
-#     'HT_b':('HT_bjets',linspace(0, 4000, 101).tolist(),';H_{T} of b jets [GeV]'),  
-#     'HT_ratio':('HT_ratio',linspace(0, 40, 41).tolist(),';H_{T} ratio of 4 leading pT jets to other jets'), 
-#     'HT_2m':('HT_2m',linspace(0, 3000, 101).tolist(),';Event H_{T} - (H_{T} of 2 lead b jets)'),
-#     'Centrality':('centrality',linspace(0, 1, 21).tolist(),';H_{T}/H'),
+#	'minMlb':('minMleppBjet',linspace(0, 1000, 201).tolist(),';min[M(l,b)] [GeV]'),
+	'minMlbSBins':('minMleppBjet',linspace(0, 1000, 1001).tolist(),';min[M(l,b)] [GeV]'),
+    'HT_b':('HT_bjets',linspace(0, 4000, 101).tolist(),';H_{T} of b jets [GeV]'),  
+    'HT_ratio':('HT_ratio',linspace(0, 40, 41).tolist(),';H_{T} ratio of 4 leading pT jets to other jets'), 
+    'HT_2m':('HT_2m',linspace(0, 3000, 101).tolist(),';Event H_{T} - (H_{T} of 2 lead b jets)'),
+    'Centrality':('centrality',linspace(0, 1, 21).tolist(),';H_{T}/H'),
      'thirdcsvb_bb':('thirdcsvb_bb',linspace(0, 1, 51).tolist(),'Jet with third-highest DeepCSVb + DeepCSVbb in the evt'),
-#     'fourthcsvb_bb':('fourthcsvb_bb',linspace(0, 1, 21).tolist(),'Jet with fourth-highest DeepCSVb + DeepCSVbb in the evt'),
-#     'csvJet3':('csvJet3',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet3pt'),
-#     'csvJet4':('csvJet4',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet4pt'),
-#     'HTx':('HTx',linspace(0, 1000, 101).tolist(),';H_{T} of reduced hadronic system [GeV]'), 
-#     'MHRE':('MHRE',linspace(0, 1000, 101).tolist(),';Invariant mass of all jets minus reconst. had. tops [GeV]'), 
-#     'GD_Ttrijet_TopMass':('GD_Ttrijet_TopMass',linspace(0, 400, 101).tolist(),';Invariant mass of good trijet [GeV]'),
-#     'BD_Ttrijet_TopMass':('BD_Ttrijet_TopMass',linspace(0, 2000, 501).tolist(),';Invariant mass of bad trijets [GeV]'),
-#     'GD_DCSV_jetNotdijet':('GD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for good trijet'),
-#     'BD_DCSV_jetNotdijet':('BD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for bad trijets'),
-#     'GD_DR_Tridijet':('GD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the good trijet'),
-#     'BD_DR_Tridijet':('BD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the bad trijets'),
-#     'GD_DR_Trijet_jetNotdijet':('GD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the good trijet'),
-#     'BD_DR_Trijet_jetNotdijet':('BD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the bad trijets'),
-#     'GD_Mass_minDR_dijet':('GD_Mass_minDR_dijet',linspace(0, 250, 51).tolist(),';dijet inv. mass of 2 jets in good trijet with min dR separation [GeV]'),
-#     'BD_Mass_minDR_dijet':('BD_Mass_minDR_dijet',linspace(0, 1000, 201).tolist(),';dijet invariant mass of two jets in bad trijets with min dR separation [GeV]'),
-#     'GD_pTrat':('GD_pTrat',linspace(0, 2, 21).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in good trijet'),
-#     'BD_pTrat':('BD_pTrat',linspace(0, 4, 41).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in bad trijets'),
+    'fourthcsvb_bb':('fourthcsvb_bb',linspace(0, 1, 21).tolist(),'Jet with fourth-highest DeepCSVb + DeepCSVbb in the evt'),
+    'csvJet3':('csvJet3',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet3pt'),
+    'csvJet4':('csvJet4',linspace(0, 1, 21).tolist(),'DeepCSVb + DeepCSVbb for jet4pt'),
+    'HTx':('HTx',linspace(0, 1000, 101).tolist(),';H_{T} of reduced hadronic system [GeV]'), 
+    'MHRE':('MHRE',linspace(0, 1000, 101).tolist(),';Invariant mass of all jets minus reconst. had. tops [GeV]'), 
+    'GD_Ttrijet_TopMass':('GD_Ttrijet_TopMass',linspace(0, 400, 101).tolist(),';Invariant mass of good trijet [GeV]'),
+    'BD_Ttrijet_TopMass':('BD_Ttrijet_TopMass',linspace(0, 2000, 501).tolist(),';Invariant mass of bad trijets [GeV]'),
+    'GD_DCSV_jetNotdijet':('GD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for good trijet'),
+    'BD_DCSV_jetNotdijet':('BD_DCSV_jetNotdijet',linspace(0, 1, 21).tolist(),';DCSVb + DCSVbb for jet NOT used in dijet invariant mass for bad trijets'),
+    'GD_DR_Tridijet':('GD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the good trijet'),
+    'BD_DR_Tridijet':('BD_DR_Tridijet',linspace(0, 4, 21).tolist(),';dR between trijet and the W dijet for the bad trijets'),
+    'GD_DR_Trijet_jetNotdijet':('GD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the good trijet'),
+    'BD_DR_Trijet_jetNotdijet':('BD_DR_Trijet_jetNotdijet',linspace(0, 5, 21).tolist(),';dR between trijet and the b jet (jet not in W dijet) for the bad trijets'),
+    'GD_Mass_minDR_dijet':('GD_Mass_minDR_dijet',linspace(0, 250, 51).tolist(),';dijet inv. mass of 2 jets in good trijet with min dR separation [GeV]'),
+    'BD_Mass_minDR_dijet':('BD_Mass_minDR_dijet',linspace(0, 1000, 201).tolist(),';dijet invariant mass of two jets in bad trijets with min dR separation [GeV]'),
+    'GD_pTrat':('GD_pTrat',linspace(0, 2, 21).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in good trijet'),
+    'BD_pTrat':('BD_pTrat',linspace(0, 4, 41).tolist(),';rat. vec. sum  pT jets to scalar sum pT jets in bad trijets'),
     'Aplanarity':('Aplanarity',linspace(0, .5, 26).tolist(),';Aplanarity'),
     'FW_momentum_0':('FW_momentum_0',linspace(.999999, 1.000001, 21).tolist(),';FW moment 0'),
     'FW_momentum_1':('FW_momentum_1',linspace(0, 1., 51).tolist(),';FW moment 1'),
@@ -310,7 +315,7 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
     'invM_jet45' :('invM_jet45', linspace(0,400, 201).tolist(),';Mass of jets with fourth and fith highest CSV scores'),
     'invM_jet46' :('invM_jet46', linspace(0,400, 201).tolist(),';Mass of jets with fourth and sixth highest CSV scores'),
     'invM_jet56' :('invM_jet56', linspace(0,400, 201).tolist(),';Mass of jets with fifth and sixth highest CSV scores'),
-    'alphaT' :('alphaT', linspace(0,200, 201).tolist(),';FIGURE THIS OUT!!'), #need to figure this out!!
+    'alphaT' :('alphaT', linspace(0,200, 201).tolist(),';alphaT'), #need to figure this out!!
     'corr_met_singleLepCalc' :('corr_met_singleLepCalc', linspace(0,800, 201).tolist(),';MET [GeV]'),
     'csvJet1' :('csvJet1', linspace(0,1, 101).tolist(),'; DeepCSVb+DeepCSVbb Score of 1st pT jet'),
     'csvJet2' :('csvJet2', linspace(0,1, 101).tolist(),'; DeepCSVb+DeepCSVbb Score of 2nd pT jet'),
@@ -361,10 +366,10 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
 	'ratio_HTdHT4leadjets' :('ratio_HTdHT4leadjets', linspace(1,3, 51).tolist(),';ratio of total HT divided by HT of 4 lead pT jets'),
 	'secondcsvb_bb' :('secondcsvb_bb', linspace(0,1, 51).tolist(),';DeepCSVb+DeepCSVbb score of jet with second-best DCSVbpbb score'),
 	'theJetLeadPt' :('theJetLeadPt', linspace(0,800, 81).tolist(),';pT of lead pT jet [GeV]'), #should duplicate the info in Jet1Pt but putting this in to match what Jangbae has in some of his code...although really should not be necessary but I have already typed it in so...
-	'MT2bb' :('MT2bb', linspace(0,100, 101).tolist(),';Davis Moment 2 of 2 lead pT b jets'), #no longer s of 31 March 2019#dummy for the moment bc branch was not filled in the pre 31 March 2019 edition of step2
+	'MT2bb' :('MT2bb', linspace(0,100, 101).tolist(),';Davis Moment 2 of 2 lead pT b jets'), #no longer as of 31 March 2019#dummy for the moment bc branch was not filled in the pre 31 March 2019 edition of step2
 	'TJetLeadPt' :('TJetLeadPt', linspace(-100,-98, 21).tolist(),';Lead pT top jet'), #dummy for the moment bc branch was not filled in the pre 31 march 2019 edition of step2
 	'WJetLeadPt' :('WJetLeadPt', linspace(-100,-98, 21).tolist(),';Lead pT W jet'), #dummy for the moment bc branch was not filled in the pre 31 march 2019 edition of step2
-	
+	'minMleppJet' :('minMleppJet', linspace(0,300, 31).tolist(),';Min mass lep & jet pair [GeV]'),
 	}
 
 print "PLOTTING:",iPlot
