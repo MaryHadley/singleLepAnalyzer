@@ -85,11 +85,13 @@ def analyze(tTree,process,cutList,isotrig,doAllSys,doJetRwt,iPlot,plotDetails,ca
 # 	HTweightStrUp = '1'
 # 	HTweightStrDn = '1'
 	if 'Data' not in process:
-		weightStr          += ' * '+topPt13TeVstr+' * '+HTweightStr+' * '+TrigEff+' * pileupWeight * lepIdSF * EGammaGsfSF * (MCWeight_singleLepCalc/abs(MCWeight_singleLepCalc)) * '+str(weight[process])
+		weightStr          += ' * '+topPt13TeVstr+' * '+HTweightStr+' * '+TrigEff+' * pileupWeight * lepIdSF * EGammaGsfSF * L1NonPrefiringProb_CommonCalc *(MCWeight_singleLepCalc/abs(MCWeight_singleLepCalc)) * '+str(weight[process])
 		weightTrigEffUpStr  = weightStr.replace(TrigEff,'('+TrigEff+'+'+TrigEff+'Uncert)')
 		weightTrigEffDownStr= weightStr.replace(TrigEff,'('+TrigEff+'-'+TrigEff+'Uncert)')
 		weightPileupUpStr   = weightStr.replace('pileupWeight','pileupWeightUp')
 		weightPileupDownStr = weightStr.replace('pileupWeight','pileupWeightDown')
+		weightL1NonPFPUpStr  = weightStr.replace('L1NonPrefiringProb_CommonCalc','L1NonPrefiringProbUp_CommonCalc')
+		weightL1NonPFPDownStr = weightStr.replace('L1NonPrefiringProb_CommonCalc','L1NonPrefiringProbDown_CommonCalc' )
 		weightmuRFcorrdUpStr   = 'renormWeights[5] * '+weightStr
 		weightmuRFcorrdDownStr = 'renormWeights[3] * '+weightStr
 		weightmuRUpStr      = 'renormWeights[4] * '+weightStr
@@ -173,9 +175,10 @@ def analyze(tTree,process,cutList,isotrig,doAllSys,doJetRwt,iPlot,plotDetails,ca
 	else: hists[iPlot+'_'+lumiStr+'fb_'+catStr+'_'+process]  = TH1D(iPlot+'_'+lumiStr+'fb_'+catStr+'_'+process,xAxisLabel,len(xbins)-1,xbins)
 	if doAllSys:
 		#systList = ['trigeff','pileup','muRFcorrd','muR','muF','toppt','ht','topsf','jms','jmr','tau21','taupt','btag','mistag','jec','jer'] #mary change with julie, hack to run just muRF
-                systList = ['muRFcorrd']
+                systList = ['muRFcorrd', 'L1NonPFP']
 		for syst in systList:
 			for ud in ['Up','Down']:
+                                print iPlot+syst+ud+'_'+lumiStr+'fb_'+catStr+'_'+process
 				if isPlot2D: hists[iPlot+syst+ud+'_'+lumiStr+'fb_'+catStr+'_'+process] = TH2D(iPlot+syst+ud+'_'+lumiStr+'fb_'+catStr+'_'+process,yAxisLabel+xAxisLabel,len(ybins)-1,ybins,len(xbins)-1,xbins)
 				else: hists[iPlot+syst+ud+'_'+lumiStr+'fb_'+catStr+'_'+process] = TH1D(iPlot+syst+ud+'_'+lumiStr+'fb_'+catStr+'_'+process,xAxisLabel,len(xbins)-1,xbins)
 		#for i in range(100): #this line and next two (if, else) mary change with julie, hack to run just muRF
@@ -192,6 +195,9 @@ def analyze(tTree,process,cutList,isotrig,doAllSys,doJetRwt,iPlot,plotDetails,ca
 		#tTree[process].Draw(plotTreeName+' >> '+iPlot+'pileupDown_'   +lumiStr+'fb_'+catStr+'_'+process, weightPileupDownStr+'*('+fullcut+')', 'GOFF')
 		tTree[process].Draw(plotTreeName+' >> '+iPlot+'muRFcorrdUp_'  +lumiStr+'fb_'+catStr+'_'+process, weightmuRFcorrdUpStr  +'*('+fullcut+')', 'GOFF')
 		tTree[process].Draw(plotTreeName+' >> '+iPlot+'muRFcorrdDown_'+lumiStr+'fb_'+catStr+'_'+process, weightmuRFcorrdDownStr+'*('+fullcut+')', 'GOFF')
+		tTree[process].Draw(plotTreeName+' >> '+iPlot+'L1NonPFPUp_'  +lumiStr+'fb_'+catStr+'_'+process, weightL1NonPFPUpStr  +'*('+fullcut+')', 'GOFF')
+		tTree[process].Draw(plotTreeName+' >> '+iPlot+'L1NonPFPDown_'  +lumiStr+'fb_'+catStr+'_'+process, weightL1NonPFPDownStr  +'*('+fullcut+')', 'GOFF')
+		
 		#tTree[process].Draw(plotTreeName+' >> '+iPlot+'muRUp_'        +lumiStr+'fb_'+catStr+'_'+process, weightmuRUpStr+'*('+fullcut+')', 'GOFF')
 		#tTree[process].Draw(plotTreeName+' >> '+iPlot+'muRDown_'      +lumiStr+'fb_'+catStr+'_'+process, weightmuRDownStr+'*('+fullcut+')', 'GOFF')
 		#tTree[process].Draw(plotTreeName+' >> '+iPlot+'muFUp_'        +lumiStr+'fb_'+catStr+'_'+process, weightmuFUpStr+'*('+fullcut+')', 'GOFF')

@@ -30,7 +30,7 @@ if not isCategorized: pfix='kinematics_'+region+'_'
 #pfix+='2019_3_30' #additional variables to use with BDT/NN added 2019_3_30
 #pfix+='HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00' #still missing the minMleppJet branch but want to ask Jangbae a question about this
 #pfix+="2019_4_3"
-pfix+='2019_4_4'
+pfix+='2019_4_9'
 print 'pfix is:', pfix
 outDir = os.getcwd()+'/'+pfix+'/'+cutString
 
@@ -43,7 +43,8 @@ doQ2sys = False#even if you set doAllSys to true, you need to set the doQ2sys to
 if not doAllSys: doQ2sys = False
 addCRsys = False
 #systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','toppt','ht','muR','muF','muRFcorrd','trigeff','btag','mistag']
-systematicList = ['muRFcorrd',] #muRFcorrd #hack to just run muRFcorrd, mary change with julie
+systematicList = ['muRFcorrd', 'L1NonPFP'] #muRFcorrd #hack to just run muRFcorrd, mary change with julie
+#systematicList = ['L1NonPFP']
 normalizeRENORM_PDF = False #normalize the renormalization/pdf uncertainties to nominal templates --> normalizes signal processes only !!!!
 rebinBy = -1 #performs a regular rebinning with "Rebin(rebinBy)", put -1 if rebinning is not wanted
 

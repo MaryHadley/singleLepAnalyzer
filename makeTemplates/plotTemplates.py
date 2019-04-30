@@ -33,7 +33,7 @@ if not isCategorized: pfix='kinematics_'+region+'_'
 #templateDir = os.getcwd()+'/'+pfix+'2019_3_31/'+cutString+'/'
 #templateDir = os.getcwd()+'/'+'kinematics_PS_HT_TEST_2019_4_2/el35mu30_MET60_MT60_1jet0_2jet00/'
 #templateDir = os.getcwd()+'/'+pfix+'2019_4_3/'+cutString+'/'
-templateDir = os.getcwd()+'/'+pfix+'2019_4_4/'+cutString+'/'
+templateDir = os.getcwd()+'/'+pfix+'2019_4_9/'+cutString+'/'
 print 'templateDir is:', templateDir
 postFitFile=os.getcwd()+'/../thetaLimits/chi2test_2017_2_12/histos-mle.root'
 plotPostFit = False #this is not working yet!!
@@ -58,7 +58,9 @@ else: bkgHistColors = {'top':rt.kAzure+8,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5}
 #systematicList = ['pileup','jec','jer','jms','jmr','tau21','taupt','topsf','trigeff','ht',
 #				  'btag','mistag','pdfNew','muRFcorrdNew','toppt']
 
-systematicList = ['muRFcorrd']
+#systematicList = ['muRFcorrd']
+#systematicList = ['L1NonPFP']
+systematicList = ['muRFcorrd', 'L1NonPFP']
 
 if 'muRFcorrdNew' not in systematicList: saveKey='_noQ2'
 doAllSys = True

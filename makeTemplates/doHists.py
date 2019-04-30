@@ -22,7 +22,8 @@ lumiStr = str(targetlumi/1000).replace('.','p') # 1/fb
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_032719_step2/nominal' # based on 30 GeV sample that Sinan began with
 #step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lepTT_033119_step2/nominal' #updated so that all the branches should be filled
 #step1Dir ='/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_033119_step1hadds/nominal' #used to test updated singleLepAnalyzer
-step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_040319_step2/nominal' #step2Dir, actually, in this case
+#step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_040319_step2/nominal' #step2Dir, actually, in this case
+step1Dir = '/mnt/hadoop/users/mhadley/TTTT/LJMet94X_1lep_040819_step2haddsL1Prefiring/nominal' #Step2Dir with L1 prefiring branches implemented
 
 
 """
@@ -61,7 +62,7 @@ elif whichSignal=='TT': decays = ['BWBW','THTH','TZTZ','TZBW','THBW','TZTH'] #T'
 elif whichSignal=='BB': decays = ['TWTW','BHBH','BZBZ','BZTW','BHTW','BZBH'] #B' decays
 else: decays = [''] #decays to tWtW 100% of the time
 
-iPlot = 'HT' #choose a discriminant from plotList below!
+iPlot = 'deltaR_lepJets' #choose a discriminant from plotList below!
 if len(sys.argv)>2: iPlot=sys.argv[2]
 region = 'PS'
 if len(sys.argv)>3: region=sys.argv[3]
